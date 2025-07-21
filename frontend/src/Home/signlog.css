@@ -1,0 +1,96 @@
+/* Container and Card */
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.auth-card {
+  background: #ffffff;
+  padding: 30px 40px;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 400px;
+}
+
+/* Toggle Buttons */
+.auth-toggle {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.auth-toggle-btn {
+  flex: 1;
+  padding: 10px 15px;
+  font-weight: bold;
+  background: #f0f0f0;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s;
+  border-radius: 10px 10px 0 0;
+}
+
+.auth-toggle-btn.active {
+  background: #1e3c72;
+  color: white;
+}
+
+/* Form and Inputs */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-input {
+  margin-bottom: 15px;
+  padding: 12px 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  font-size: 15px;
+  transition: border-color 0.3s;
+}
+
+.auth-input:focus {
+  border-color: #1e3c72;
+}
+
+/* Submit Button */
+.auth-submit {
+  padding: 12px;
+  background: #1e3c72;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.auth-submit:hover {
+  background: #2a5298;
+}
+
+/* Messages */
+.auth-error {
+  color: #d8000c;
+  background-color: #ffbaba;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.auth-success {
+  color: #4f8a10;
+  background-color: #dff2bf;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  text-align: center;
+}

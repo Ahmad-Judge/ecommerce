@@ -1,0 +1,33 @@
+    /* Additional Custom Styles */
+    .cart-container {
+        margin: 30px auto;
+        max-width: 960px;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+    }
+
+    img {
+        width: 50px;
+        height: auto;
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .btn-sm {
+        font-size: 0.8rem;
+    }
+
+    tfoot td {
+        font-weight: bold;
+    }
+
+    .checkout-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }

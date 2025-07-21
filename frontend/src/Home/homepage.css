@@ -1,0 +1,69 @@
+
+body {
+    background-color: #212529;
+padding: 0;
+margin: 0;
+overflow-x:hidden ;
+}
+.FH {
+    cursor: default;
+}
+
+#FI1:hover {
+    color: blue !important;
+}
+
+#FI2:hover {
+    color: #a42a2a !important;
+}
+
+#FI3:hover {
+    color: red !important;
+}
+
+.whatsImages {
+    border-radius: 50%;
+    max-width: 150px;
+}
+
+.trending_text {
+    font-size: 10px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.zoomed:hover {
+    transform: scale(1.15);
+    transition: 0.5s ease-in-out;
+}
+
+.carousel-item {
+    transition: transform 1s ease-in-out;
+}
+
+.carousel-inner {
+    position: relative;
+}
+
+.carousel-img {
+    width: 250px;
+    transition: transform 0.5s ease;
+    opacity: 1;
+}
+
+.carousel-item.active .carousel-img {
+    transform: scale(1.15);
+    opacity: 1;
+}
+/* Center items in the row on small screens */
+@media (max-width: 767.98px) {
+  .custom-center-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .custom-center-row > div {
+    max-width: 80%; /* optional: make images narrower on small screens */
+  }
+}
