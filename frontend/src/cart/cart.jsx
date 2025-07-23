@@ -8,6 +8,8 @@ import {
 } from "../redux/slices/cartSlice";
 import "./cart.css";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const Cart = () => {
   const dispatch = useDispatch();
   const { items: cart, loading, error } = useSelector((state) => state.cart);
@@ -66,7 +68,7 @@ const Cart = () => {
                   </td>
                   <td>
                     <img
-                      src={`http://localhost:5000/uploads/${item.picture}`}
+                      src={`${API_URL}/uploads/${item.picture}`}
                       alt={item.title}
                       width="50px"
                     />

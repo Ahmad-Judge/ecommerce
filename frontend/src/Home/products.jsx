@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Cookies from "js-cookie";
-import { useCart } from "../cart/cartcontext";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../redux/slices/cartSlice";
 import './products.css';
 
 const Products = () => {
   const [products, setProducts] = useState([]);
-  const { updateCart } = useCart(); // Get updateCart from context
+  const dispatch = useDispatch();
   const API_URL = import.meta.env.VITE_API_URL;
 
   // Fetch products
@@ -16,12 +16,9 @@ const Products = () => {
       .catch(error => console.error("Error fetching products:", error));
   }, [API_URL]);
 
-  // Add to cart handler
-  const addToCart = (productId) => {
-    let cart = Cookies.get("cart") ? JSON.parse(Cookies.get("cart")) : {};
-    cart[productId] = (cart[productId] || 0) + 1;
-    Cookies.set("cart", JSON.stringify(cart), { expires: 1 });
-    updateCart(cart);
+  // Add to cart handler using Redux
+  const handleAddToCart = (productId) => {
+    dispatch(addToCart(productId));
     alert("Product added to cart!");
   };
 
@@ -51,7 +48,7 @@ const Products = () => {
                 </div>
                 <button
                   className="custom-btn"
-                  onClick={() => addToCart(product._id)}
+                  onClick={() => handleAddToCart(product._id)}
                 >
                   PKR {product.price} • Add To Cart
                 </button>

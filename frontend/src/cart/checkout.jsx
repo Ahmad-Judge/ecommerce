@@ -1,11 +1,12 @@
-import React, { useState } from "react";
-import { useCart } from "./cartcontext";
+import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { clearCart } from "../redux/slices/cartSlice";
 
 const Checkout = () => {
     const navigate = useNavigate();
-    const { cart, updateCart } = useCart();
+    const dispatch = useDispatch();
     const API_URL = import.meta.env.VITE_API_URL;
 
     const [formData, setFormData] = useState({
@@ -14,6 +15,50 @@ const Checkout = () => {
         address: "",
         paymentMethod: "credit_card",
     });
+
+    const [cart, setCart] = useState({});
+    const [cartProducts, setCartProducts] = useState([]);
+
+    // Get cart from localStorage
+    const getCartFromStorage = () => {
+        try {
+            const cart = localStorage.getItem('cart');
+            return cart ? JSON.parse(cart) : {};
+        } catch (error) {
+            console.error('Error parsing cart from localStorage:', error);
+            return {};
+        }
+    };
+
+    // Load cart and fetch product details
+    useEffect(() => {
+        const loadCart = async () => {
+            const storedCart = getCartFromStorage();
+            setCart(storedCart);
+
+            if (Object.keys(storedCart).length > 0) {
+                try {
+                    // Fetch all products
+                    const response = await axios.get(`${API_URL}/api/products`);
+                    const allProducts = response.data;
+                    
+                    // Filter products that are in cart and add quantities
+                    const productsInCart = allProducts
+                        .filter(product => storedCart[product._id])
+                        .map(product => ({
+                            ...product,
+                            quantity: storedCart[product._id]
+                        }));
+                    
+                    setCartProducts(productsInCart);
+                } catch (error) {
+                    console.error("Error fetching products:", error);
+                }
+            }
+        };
+
+        loadCart();
+    }, [API_URL]);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -27,7 +72,7 @@ const Checkout = () => {
             return;
         }
 
-        const total = Object.values(cart).reduce(
+        const total = cartProducts.reduce(
             (sum, item) => sum + item.price * item.quantity,
             0
         );
@@ -49,7 +94,11 @@ const Checkout = () => {
             });
 
             alert("Order placed successfully!");
-            updateCart({});
+            
+            // Clear cart from localStorage and Redux
+            localStorage.removeItem('cart');
+            dispatch(clearCart());
+            
             navigate("/confirm", { state: response.data.order });
         } catch (error) {
             console.error("Order error:", error.response?.data || error.message);
