@@ -3,31 +3,33 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import "./cart.css";
 
-const API_URL = import.meta.env.VITE_API_URL;
-const API_BASE_URL = `${API_URL}/cart`;
+const API_BASE_URL = "http://localhost:5000/cart";
 
 const Cart = () => {
     const [cart, setCart] = useState([]);
 
+    // Fetch cart items
     useEffect(() => {
-        axios.get(API_BASE_URL, { withCredentials: true })
-             .then(res => {
-      console.log("Cart from server:", res.data.products); // 👈 This shows in browser
-      setCart(res.data.products);
-    })
+        axios.get(`${API_BASE_URL}`, { withCredentials: true })
+            .then(res => {
+                console.log("Fetched Cart Data:", res.data.products); // ✅ Debugging
+                setCart(res.data.products);
+            })
             .catch(err => console.error("Error fetching cart:", err));
     }, []);
 
+    // ✅ Moved updateQuantity inside the component
     const updateQuantity = async (productId, quantity) => {
         if (quantity < 1) return;
 
         try {
-            await axios.post(
-                `${API_URL}/update-cart-quantity`,
+            const res = await axios.post(
+                "http://localhost:5000/update-cart-quantity",
                 { productId, quantity },
                 { withCredentials: true }
             );
 
+            // ✅ Update state with the new cart
             setCart(prevCart =>
                 prevCart.map(item =>
                     item._id === productId ? { ...item, quantity } : item
@@ -38,86 +40,79 @@ const Cart = () => {
         }
     };
 
+    // Remove from cart
     const removeFromCart = (productId) => {
-        axios.delete(`${API_BASE_URL}/remove/${productId}`, { withCredentials: true })
+        axios.delete(`${API_BASE_URL}/remove/${productId}`)
             .then(() => {
                 setCart(cart.filter(item => item._id !== productId));
             })
             .catch(err => console.error("Error removing item:", err));
     };
 
+    // Calculate total price
     const totalPrice = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
     return (
-        <div className="container my-4 text-light">
-            <h1 className="mb-4 text-center">Shopping Cart</h1>
+        <div className="container mt-4" style={{ color: "white" }}>
+            <h1>Shopping Cart</h1>
 
             {cart.length > 0 ? (
                 <>
-                    <div className="table-responsive">
-                        <table className="table table-bordered table-hover align-middle text-white">
-                            <thead className="table-dark">
-                                <tr>
-                                    <th>Product ID</th>
-                                    <th>Description</th>
-                                    <th>Price</th>
-                                    <th>Quantity</th>
-                                    <th>Picture</th>
-                                    <th>Action</th>
+                    <table className="table table-striped table-bordered">
+                        <thead className="table-dark">
+                            <tr>
+                                <th>Product</th>
+                                <th>Description</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Picture</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {cart.map(item => (
+                                <tr key={item._id}>
+                                    <td>{item._id}</td>
+                                    <td>{item.description}</td>
+                                    <td>PKR {item.price.toFixed(2) * item.quantity}</td>
+                                    <td>
+                                        <input
+                                            type="number"
+                                            min="1"
+                                            value={item.quantity}
+                                            className="form-control form-control-sm"
+                                            onChange={e => updateQuantity(item._id, parseInt(e.target.value) || 1)}
+                                        />
+                                    </td>
+                                    <td>
+                                        <img
+                                            src={`http://localhost:5000/uploads/${item.picture}`}
+                                            alt={item.title}
+                                            width="50px"
+                                        />
+                                    </td>
+                                    <td>
+                                        <button className="btn btn-danger btn-sm" onClick={() => removeFromCart(item._id)}>
+                                            Remove
+                                        </button>
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                {cart.map(item => (
-                                    <tr key={item._id}>
-                                        <td>{item._id}</td>
-                                        <td>{item.description}</td>
-                                        <td>PKR {(item.price * item.quantity).toFixed(2)}</td>
-                                        <td style={{ maxWidth: "80px" }}>
-                                            <input
-                                                type="number"
-                                                min="1"
-                                                className="form-control form-control-sm"
-                                                value={item.quantity}
-                                                onChange={e => updateQuantity(item._id, parseInt(e.target.value) || 1)}
-                                            />
-                                        </td>
-                                        <td>
-                                            <img
-                                                src={`${API_URL}/uploads/${item.picture}`}
-                                                alt={item.title}
-                                                className="img-fluid"
-                                                style={{ maxWidth: "60px", maxHeight: "60px", objectFit: "cover" }}
-                                            />
-                                        </td>
-                                        <td>
-                                            <button
-                                                className="btn btn-sm btn-danger"
-                                                onClick={() => removeFromCart(item._id)}
-                                            >
-                                                Remove
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td colSpan="3" className="text-end fw-bold">Total</td>
-                                    <td colSpan="3" className="fw-bold">PKR {totalPrice.toFixed(2)}</td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-
-                    <div className="d-flex flex-column flex-sm-row justify-content-between gap-2 mt-4">
-                        <Link to="/" className="btn btn-outline-primary w-100 w-sm-auto">Continue Shopping</Link>
-                        <Link to="/checkout" className="btn btn-success w-100 w-sm-auto">Checkout</Link>
+                            ))}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colSpan="3" className="text-end"><strong>Total</strong></td>
+                                <td colSpan="3">PKR {totalPrice.toFixed(2)}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <div className="d-flex justify-content-between">
+                        <Link to="/" className="btn btn-primary">Continue Shopping</Link>
+                        <Link to="/checkout" className="btn btn-success">Checkout</Link>
                     </div>
                 </>
             ) : (
-                <div className="text-center">
-                    <p>Your cart is empty. <Link to="/">Add products</Link></p>
-                </div>
+                <p>Your cart is empty. <Link to="/">Add products</Link></p>
             )}
         </div>
     );
