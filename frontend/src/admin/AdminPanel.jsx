@@ -1,7 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./Navbar";
-import Dashboard from "./dashboard";
+import Dashboard from "./Dashboard";
 import Products from "./Products";
 import Categories from "./Categories";
 import Orders from "./Orders";

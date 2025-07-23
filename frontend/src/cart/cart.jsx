@@ -11,7 +11,10 @@ const Cart = () => {
 
     useEffect(() => {
         axios.get(API_BASE_URL, { withCredentials: true })
-            .then(res => setCart(res.data.products))
+             .then(res => {
+      console.log("Cart from server:", res.data.products); // 👈 This shows in browser
+      setCart(res.data.products);
+    })
             .catch(err => console.error("Error fetching cart:", err));
     }, []);
 
