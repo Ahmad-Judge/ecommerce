@@ -27,7 +27,7 @@ const EditProduct = () => {
       try {
         const res = await axios.get(`${API_URL}/api/products/${id}`);
         setProduct(res.data);
-        setPreviewImage(`${API_URL}/uploads/${res.data.picture}`);
+        setPreviewImage(res.data.picture);
       } catch (error) {
         console.error("Error fetching product:", error);
       }

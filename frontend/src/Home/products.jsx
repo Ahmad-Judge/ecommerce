@@ -31,7 +31,7 @@ const Products = () => {
             <div className="custom-card">
               <div className="custom-card-img">
                 <img
-                  src={`${API_URL}/uploads/${product.picture}`}
+                  src={product.picture} // ✅ Now using Cloudinary URL directly
                   alt="Product"
                   className="img-fluid"
                 />

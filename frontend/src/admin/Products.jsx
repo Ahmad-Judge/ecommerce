@@ -191,7 +191,7 @@ const Products = () => {
                 <td>{product.isFeatured ? "Yes" : "No"}</td>
                 <td>
                   <img
-                    src={`${API_BASE}/uploads/${product.picture}`}
+                    src={product.picture}
                     alt="Product"
                     width="100"
                     className="img-fluid rounded"
