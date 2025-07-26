@@ -68,7 +68,7 @@ const Cart = () => {
                   </td>
                   <td>
                     <img
-                      src={`${API_URL}/uploads/${item.picture}`}
+                       src={item.picture}
                       alt={item.title}
                       width="50px"
                     />
